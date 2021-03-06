@@ -199,6 +199,33 @@ app.post('/company', (req,res) => {
 	})
 });
 
+/**
+ * @swagger
+ * /company:
+ *     patch:
+ *          description: Update company data into the company table. 
+ *          produces:
+ *              - application/json
+ *          parameters:
+ *              - in: body
+ *                name: company
+ *                description: the company to create
+ *                schema:
+ *                   type: object
+ *                   required: 
+ *                       - COMPANY_ID
+ *                   properties:
+ *                       COMPANY_ID:
+ *                          type: string
+ *                       COMPANY_NAME:
+ *                          type: string
+ *                       COMPANY_CITY:
+ *                          type: string
+ *          responses:
+ *              200:
+ *                  description: return updated object of company table
+ *              
+ */
 
 app.patch("/company", (req, res) => {
     pool.getConnection().then((conn) => {
@@ -272,7 +299,35 @@ app.delete("/company/:id", (req, res) => {
         });
 });
 
-
+/**
+ * @swagger
+ * /company/{id}:
+ *     put:
+ *          description: update the company table information based on the id sgiven
+ *          produces:
+ *              - application/json
+ *          parameters:
+ *              - in: path
+ *                name: id
+ *                description: The company_id to be update/inserted
+ *                required: true
+ *              - in: body
+ *                name: company
+ *                description: the company to create
+ *                schema:
+ *                   type: object
+ *                   required: 
+ *                       - COMPANY_NAME
+ *                       - COMPANY_CITY
+ *                   properties:
+ *                       COMPANY_NAME:
+ *                          type: string
+ *                       COMPANY_CITY:
+ *                          type: string
+ *          responses:
+ *              200:
+ *                  description: it return updated object of comapny table 
+ */
 
 
 app.put("/company/:COMPANY_ID", (req, res) => {
