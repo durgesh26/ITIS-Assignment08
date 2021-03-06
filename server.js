@@ -168,6 +168,103 @@ app.post('/company', (req,res) => {
 	})
 });
 
+
+app.patch("/company", (req, res) => {
+    pool.getConnection().then((conn) => {
+            let query = "select * from company where COMPANY_ID=" + req.body.COMPANY_ID;
+            conn
+                .query(query)
+                .then((rows) => {
+                    let query_update = "update company set ";
+                    if (req.body.COMPANY_NAME) {
+                        query_update += "COMPANY_NAME='" + req.body.COMPANY_NAME.trim() + "', ";
+                    }
+                    if (req.body.COMPANY_CITY) {
+                        query_update += "COMPANY_CITY='" + req.body.COMPANY_CITY.trim() + "' ";
+                    }
+                    query_update += "where COMPANY_ID='" + req.body.COMPANY_ID.trim()+"'";
+                    conn.query(query_update)
+                        .then((rows) => {
+                            conn.release();
+                            res.json(output);
+                        })
+                        .catch((err) => {
+                            conn.release();
+                            res.json(err);
+                        });
+                })
+                .catch((err) => {
+                    conn.release();
+                    res.json(err);
+                });
+        })
+        .catch((err) => {
+            res.status(500).json(err);
+        });
+});
+
+
+
+
+app.delete("company/:id", (req, res) => {
+    pool.getConnection().then((conn) => {
+            let query = "DELETE FROM company WHERE COMPANY_ID=" + req.params.id;
+            conn
+                .query(query)
+                .then((rows) => {
+                    conn.release();
+                    res.json(output);
+                })
+                .catch((err) => {
+                    conn.release();
+                    res.json(err);
+                });
+        })
+        .catch((err) => {
+            res.status(500).json(err);
+        });
+});
+
+app.put("/company/:COMPANY_ID", (req, res) => {
+    pool.getConnection().then((conn) => {
+            let query = "select * from company where COMPANY_ID=" + req.params.COMPANY_ID;
+            conn
+                .query(query)
+                .then((rows) => {
+                    let new_query = ""
+                    if(rows.length > 0){
+                        new_query += "update company set ";
+                    if (req.body.COMPANY_NAME) {
+                        new_query += "COMPANY_NAME='" + req.body.COMPANY_NAME.trim() + "', ";
+                    }
+                    if (req.body.COMPANY_CITY) {
+                        new_query += "COMPANY_CITY='" + req.body.COMPANY_CITY.trim() + "' ";
+                    }
+                    new_query += "where COMPANY_ID='" + req.params.COMPANY_ID.trim()+"'";
+                    }else{
+                        new_query += "insert into company values('" + req.params.COMPANY_ID.trim() + "','" + req.body.COMPANY_NAME.trim() + "','" + req.body.COMPANY_CITY.trim() + "')";
+                    }
+                    
+                    conn.query(new_query)
+                        .then((rows) => {
+                            conn.release();
+                            res.json(output);
+                        })
+                        .catch((err) => {
+                            conn.release();
+                            res.json(err);
+                        });
+                })
+                .catch((err) => {
+                    conn.release();
+                    res.json(err);
+                });
+        })
+        .catch((err) => {
+            res.status(500).json(err);
+        });
+});
+
 app.listen(port, () => {
 	console.log('Example app listening at http://localhost:${port}');
 })
