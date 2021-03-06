@@ -253,7 +253,7 @@ app.patch("/company", (req, res) => {
  *              description: company  table display
  */
 
-app.delete("company/:id", (req, res) => {
+app.delete("/company/:id", (req, res) => {
     pool.getConnection().then((conn) => {
             let query = "DELETE FROM company WHERE COMPANY_ID=" + req.params.id;
             conn
