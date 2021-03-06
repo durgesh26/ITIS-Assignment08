@@ -244,7 +244,7 @@ app.patch("/company", (req, res) => {
                     conn.query(query_update)
                         .then((rows) => {
                             conn.release();
-                            res.json(output);
+                            res.json(rows);
                         })
                         .catch((err) => {
                             conn.release();
@@ -353,7 +353,7 @@ app.put("/company/:COMPANY_ID", (req, res) => {
                     conn.query(new_query)
                         .then((rows) => {
                             conn.release();
-                            res.json(output);
+                            res.json(rows);
                         })
                         .catch((err) => {
                             conn.release();
