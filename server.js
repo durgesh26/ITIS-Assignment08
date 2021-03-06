@@ -235,7 +235,23 @@ app.patch("/company", (req, res) => {
 });
 
 
-
+/**
+ * @swagger
+ * /company/{id}:
+ *     delete:
+ *       description: delete all data of the id passed in the company table
+ *       produces:
+ *          - application/json
+ *       parameters:
+ *        - name: id
+ *          in: path
+ *          desciption: company id
+ *          required: true
+ *          type: string
+ *       responses:
+ *          200:
+ *              description: company  table display
+ */
 
 app.delete("company/:id", (req, res) => {
     pool.getConnection().then((conn) => {
@@ -255,6 +271,9 @@ app.delete("company/:id", (req, res) => {
             res.status(500).json(err);
         });
 });
+
+
+
 
 app.put("/company/:COMPANY_ID", (req, res) => {
     pool.getConnection().then((conn) => {
