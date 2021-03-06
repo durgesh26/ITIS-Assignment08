@@ -78,7 +78,7 @@ app.get('/customer', (req,res) => {
  * 			name:agent_code
  * 			in: parameter
  * 			desciption: agent_code
- * 			type: integer
+ * 			type: string
  *       responses:
  *          200:
  *              description: orders table display
