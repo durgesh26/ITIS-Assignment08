@@ -153,7 +153,32 @@ app.get("/api/:tab_name", (req, res) => {
         });
 });
 
-
+/**
+ * @swagger
+ * /company:
+ *     post:
+ *          description: insert company data into company table
+ *          produces:
+ *              - application/json
+ *          parameters:
+ *              - in: body
+ *                name: company
+ *                description: the company to create
+ *                schema:
+ *                   type: object
+ *                   required: 
+ *                       - COMPANY_ID
+ *                   properties:
+ *                       COMPANY_ID:
+ *                          type: string
+ *                       COMPANY_NAME:
+ *                          type: string
+ *                       COMPANY_CITY:
+ *                          type: string
+ *          responses:
+ *              200:
+ *                  description: food table display
+ */
 
 app.post('/company', (req,res) => {
 	let query = "INSERT INTO company values('" + req.body.COMPANY_ID.trim() + "','" + req.body.COMPANY_NAME.trim() + "','" + req.body.COMPANY_CITY.trim() + "')"
