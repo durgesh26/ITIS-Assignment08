@@ -69,24 +69,25 @@ app.get('/customer', (req,res) => {
 
 /**
  * @swagger
- * /orders/{agent_code}:
+ * /orders/{agentcode}:
  *     get:
  *       description: Return all orders  from the order table
  *       produces:
  *          - application/json
  *       parameters:
- *          name:agent_code
- *          in: parameter
+ *        - name: agentcode
+ *          in: path
  *          desciption: agent_code
+ *          required: true
  *          type: string
  *       responses:
  *          200:
  *              description: orders table display
  */
 
-app.get('/orders', (req,res) => {
+app.get('/orders/:agentcode', (req,res) => {
 	pool.getConnection().then(conn => {
-		conn.query('select * from orders where agent_code=?',req.query.agent_code).then(rows =>{
+		conn.query('select * from orders where agent_code=?',req.params.agentcode).then(rows =>{
 			conn.release();
 			res.json(rows);
 		})
@@ -152,17 +153,7 @@ app.get("/api/:tab_name", (req, res) => {
         });
 });
 
-/**
- * @swagger
- * /foods:
- *     post:
- *          description: return all foods items from the food table
- *          produces:
- *              - application/json
- *          responses:
- *              200:
- *                  description: food table display
- */
+
 
 app.post('/company', (req,res) => {
 	let query = "INSERT INTO company values('" + req.body.COMPANY_ID.trim() + "','" + req.body.COMPANY_NAME.trim() + "','" + req.body.COMPANY_CITY.trim() + "')"
