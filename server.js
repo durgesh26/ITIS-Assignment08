@@ -25,32 +25,6 @@ app.use('/docs', swaggerUi.serve, swaggerUi.setup(specs));
 app.use(cors());
 
 
- 
-/**
- * @swagger
- * /
- *     get:
- *       description: Return all foods items from the table
- *       produces:
- *          - application/json
- *       responses:
- *          200:
- *              description: Object of  food containing array of prices
- */
-
-/**
- * @swagger
- * /company:
- *     post:
- *          description: insert data of company
- *          produces:
- *              - application/json
- *          responses:
- *              200:
- *                  description: Object od comapany containing array of company details
- */
-
-
 const mariadb = require('mariadb');
 const pool = mariadb.createPool({
 	host: 'localhost',
@@ -67,12 +41,12 @@ const pool = mariadb.createPool({
  * @swagger
  * /customer:
  *     get:
- *       description: Return all customer
+ *       description: Return all customer details from the customer table
  *       produces:
  *          - application/json
  *       responses:
  *          200:
- *              description: Object food containing array of prices
+ *              description: customer table display
  */
 
 app.get('/customer', (req,res) => {
@@ -92,6 +66,18 @@ app.get('/customer', (req,res) => {
 	})
 });
 
+/**
+ * @swagger
+ * /orders:
+ *     get:
+ *       description: Return all orders  from the order table
+ *       produces:
+ *          - application/json
+ *       responses:
+ *          200:
+ *              description: orders table display
+ */
+
 app.get('/orders', (req,res) => {
 	pool.getConnection().then(conn => {
 		conn.query('select * from orders where agent_code=?',req.query.agent_code).then(rows =>{
@@ -109,6 +95,18 @@ app.get('/orders', (req,res) => {
 	})
 });
 
+/**
+ * @swagger
+ * /foods:
+ *     get:
+ *          description: return all foods items from the food table
+ *          produces:
+ *              - application/json
+ *          responses:
+ *              200:
+ *                  description: food table display
+ */
+
 app.get('/foods', (req,res) => {
 	pool.getConnection().then(conn => {
 		conn.query('select * from foods').then(rows => {
@@ -125,9 +123,34 @@ app.get('/foods', (req,res) => {
 	})
 });
 
+app.get("/api/:tab_name", (req, res) => {
+    pool
+        .getConnection()
+        .then((conn) => {
+            let query = "select * from " + req.params.tab_name;
+            conn
+                .query(query)
+                .then((rows) => {
+                    conn.release();
+                    res.json(rows);
+                })
+                .catch((err) => {
+                    conn.release();
+                    res.status(500).json(err);
+                });
+        })
+        .catch((err) => {
+            // res.status(500).json(err);
+            error_res = { error: { msg: "failed to connect database" } };
+            res.status(500).json(error_res);
+        });
+});
+
+
+
 app.post('/company', (req,res) => {
 	pool.getConnection().then(conn => {
-		conn.query("INSERT INTO company(COMPANY_ID,COMPANY_NAME,COMAPANY_CITY)values('20','Tesla','New York\r')").then(rows => {
+	    conn.query("INSERT INTO company values('" + req.body.COMPANY_ID.trim() + "','" + req.body.COMPANY_NAME.trim() + "','" + req.body.COMPANY_CITY.trim() + "')").then(rows => {
 			conn.release();
 			res.json(rows);
 		})
