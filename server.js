@@ -260,7 +260,7 @@ app.delete("/company/:id", (req, res) => {
                 .query(query)
                 .then((rows) => {
                     conn.release();
-                    res.json(output);
+                    res.json(rows);
                 })
                 .catch((err) => {
                     conn.release();
