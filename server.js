@@ -23,7 +23,8 @@ const specs = swaggerJsdoc(options);
 
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(specs));
 app.use(cors());
-
+app.use(express.urlencoded({extended:true}));
+app.use(express.json());
 
 const mariadb = require('mariadb');
 const pool = mariadb.createPool({
@@ -149,8 +150,10 @@ app.get("/api/:tab_name", (req, res) => {
 
 
 app.post('/company', (req,res) => {
+	let query = "INSERT INTO company values('" + req.body.COMPANY_ID.trim() + "','" + req.body.COMPANY_NAME.trim() + "','" + req.body.COMPANY_CITY.trim() + "')"
+	console.log(query);
 	pool.getConnection().then(conn => {
-	    conn.query("INSERT INTO company values('" + req.body.COMPANY_ID.trim() + "','" + req.body.COMPANY_NAME.trim() + "','" + req.body.COMPANY_CITY.trim() + "')").then(rows => {
+	    conn.query(query).then(rows => {
 			conn.release();
 			res.json(rows);
 		})
