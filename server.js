@@ -74,11 +74,11 @@ app.get('/customer', (req,res) => {
  *       description: Return all orders  from the order table
  *       produces:
  *          - application/json
- * 		 parameters:
- * 			name:agent_code
- * 			in: parameter
- * 			desciption: agent_code
- * 			type: string
+ *       parameters:
+ *          name:agent_code
+ *          in: parameter
+ *          desciption: agent_code
+ *          type: string
  *       responses:
  *          200:
  *              description: orders table display
