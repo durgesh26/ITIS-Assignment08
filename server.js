@@ -5,6 +5,7 @@ const port = 3000;
 const swaggerJsdoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 const cors = require('cors');
+const axios = require('axios').default;
 
 const options = {
 	swaggerDefinition: {
@@ -129,6 +130,9 @@ app.get('/foods', (req,res) => {
 		res.json(err);
 	})
 });
+
+
+
 
 app.get("/api/:tab_name", (req, res) => {
     pool
@@ -370,6 +374,32 @@ app.put("/company/:COMPANY_ID", (req, res) => {
         });
 });
 
+
+app.get("/say", (req,res)=>{
+    let x = req.query.keyword;
+    let query = "https://us-east1-planar-ripsaw-297919.cloudfunctions.net/say_hello?keyword="+x;
+    if(x){
+        axios.get(query)
+        .then(response =>{
+            console.log('cloud function call successful.');
+            res.send(response.data);
+            console.log(response.data);
+        })
+        .catch(err =>{
+            err_bool = true;
+            console.log('got an error while calling google cloud function (doing a cloud function call).');
+            console.log("err =>"+err);
+            res.statusCode = 500;
+            errors.push({'msg':'some error occurred wil calling the google cloud function.'})
+        }).then(()=>{
+            console.log('end of axios request.')
+        });
+
+    }else{
+        res.send("wrong request");
+    }
+});
+
 app.listen(port, () => {
-	console.log('Example app listening at http://localhost:${port}');
+	console.log('Example app listening at http://localhost:'+port);
 })
